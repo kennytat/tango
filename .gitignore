@@ -1,0 +1,18 @@
+*.egg-info
+.DS_Store
+.vscode
+__pycache__
+/TEMP/*
+*.pyd
+.venv
+/opt
+tools/aria2c/
+tools/flag.txt
+
+# Imported from huggingface.co
+hubert_base.pt
+rmvpe.onnx
+rmvpe.pt
+# To set a Python version for the project
+.tool-versions
+weights/*

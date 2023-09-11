@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  tango:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: kennytat/tango:stable
+    container_name: tango
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    shm_size: 1024m
+    volumes:
+      - /mnt/backup/AI/tango/huggingface:/root/.cache/huggingface
+      - /mnt/backup/AI/tango/weights:/app/weights
+    ports:
+      - 7899:7899

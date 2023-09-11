@@ -1,4 +1,5 @@
 # TANGO: Text to Audio using iNstruction-Guided diffusiOn
+
 <!-- ![cover](img/tango-neurips.png) -->
 
 [Paper](https://arxiv.org/pdf/2304.13731.pdf) | [Model](https://huggingface.co/declare-lab/tango) | [Website and Examples](https://tango-web.github.io/) | [More Examples](https://github.com/declare-lab/tango/blob/master/samples/README.md) | [Huggingface Demo](https://huggingface.co/spaces/declare-lab/tango) | [Replicate demo and API](https://replicate.com/declare-lab/tango)
@@ -13,12 +14,12 @@
 
 ## Tango Model Family
 
-| Model Name                 | Model Path                                       |
-|----------------------------|-------------------------------------------------|
-| Tango                      | [https://huggingface.co/declare-lab/tango](https://huggingface.co/declare-lab/tango)                               |
-| Tango-Full-FT-Audiocaps (state-of-the-art)    | [https://huggingface.co/declare-lab/tango-full-ft-audiocaps](https://huggingface.co/declare-lab/tango-full-ft-audiocaps) |
-Tango-Full-FT-Audio-Music-Caps | [https://huggingface.co/declare-lab/tango-full-ft-audio-music-caps](https://huggingface.co/declare-lab/tango-full-ft-audio-music-caps) |
-| Tango-Full | [https://huggingface.co/declare-lab/tango-full](https://huggingface.co/declare-lab/tango-full) |
+| Model Name                                 | Model Path                                                                                                                             |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Tango                                      | [https://huggingface.co/declare-lab/tango](https://huggingface.co/declare-lab/tango)                                                   |
+| Tango-Full-FT-Audiocaps (state-of-the-art) | [https://huggingface.co/declare-lab/tango-full-ft-audiocaps](https://huggingface.co/declare-lab/tango-full-ft-audiocaps)               |
+| Tango-Full-FT-Audio-Music-Caps             | [https://huggingface.co/declare-lab/tango-full-ft-audio-music-caps](https://huggingface.co/declare-lab/tango-full-ft-audio-music-caps) |
+| Tango-Full                                 | [https://huggingface.co/declare-lab/tango-full](https://huggingface.co/declare-lab/tango-full)                                         |
 
 ## Description
 
@@ -47,6 +48,7 @@ audio = tango.generate(prompt)
 sf.write(f"{prompt}.wav", audio, samplerate=16000)
 IPython.display.Audio(data=audio, rate=16000)
 ```
+
 [CheerClap.webm](https://user-images.githubusercontent.com/13917097/233851915-e702524d-cd35-43f7-93e0-86ea579231a7.webm)
 
 The model will be automatically downloaded and saved in cache. Subsequent runs will load the model directly from cache.
@@ -58,6 +60,7 @@ prompt = "Rolling thunder with lightning strikes"
 audio = tango.generate(prompt, steps=200)
 IPython.display.Audio(data=audio, rate=16000)
 ```
+
 [Thunder.webm](https://user-images.githubusercontent.com/13917097/233851929-90501e41-911d-453f-a00b-b215743365b4.webm)
 
 <!-- [MachineClicking](https://user-images.githubusercontent.com/25340239/233857834-bfda52b4-4fcc-48de-b47a-6a6ddcb3671b.mp4 "sample 1") -->
@@ -72,6 +75,7 @@ prompts = [
 ]
 audios = tango.generate_for_batch(prompts, samples=2)
 ```
+
 This will generate two samples for each of the three text prompts.
 
 More generated samples are shown [here](https://github.com/declare-lab/tango/blob/master/samples/README.md).
@@ -101,6 +105,7 @@ Follow the instructions given in the [AudioCaps repository](https://github.com/c
 Note that we cannot distribute the data because of copyright issues.
 
 ## How to train?
+
 We use the `accelerate` package from Hugging Face for multi-gpu training. Run `accelerate config` from terminal and set up your run configuration by the answering the questions asked.
 
 You can now train **TANGO** on the AudioCaps dataset using:
@@ -162,24 +167,23 @@ We use wandb to log training and infernce results.
 
 ## Experimental Results
 
-
-
-|           **Model**            |  **Datasets**  | **Text** | **#Params** |         FD ↓          |   KL ↓   |  FAD ↓   |         OVL ↑          |   REL ↑   |
-|:------------------------------:|:--------------:|:--------:|:-----------:|:---------------------:|:--------:|:--------:|:----------------------:|:---------:|
-|          Ground truth          |       −        |    −     |      −      |           −           |    −     |    −     |         91.61          |   86.78   |
-|                                |                |          |             |                       |          |          |                        |           |
-|           DiffSound            |     AS+AC      |    ✓     |    400M     |         47.68         |   2.52   |   7.75   |           −            |     −     |
-|           AudioGen             | AS+AC+8 others |    ✗     |    285M     |           −           |   2.09   |   3.13   |           −            |     −     |
-|           AudioLDM-S           |       AC       |    ✗     |    181M     |         29.48         |   1.97   |   2.43   |           −            |     −     |
-|           AudioLDM-L           |       AC       |    ✗     |    739M     |         27.12         |   1.86   |   2.08   |           −            |     −     |
-|                                |                |          |             |                       |          |          |                        |           |
-| AudioLDM-M-Full-FT<sup>‡</sup> | AS+AC+2 others |    ✗     |    416M     |         26.12         | **1.26** |   2.57   |         79.85          |   76.84   |
-|  AudioLDM-L-Full<sup>‡</sup>   | AS+AC+2 others |    ✗     |    739M     |         32.46         |   1.76   |   4.18   |         78.63          |   62.69   |
-|       AudioLDM-L-Full-FT       | AS+AC+2 others |    ✗     |    739M     |       **23.31**       |   1.59   |   1.96   |           −            |     −     |
-|                                |                |          |             |                       |          |          |                        |           |
-|              TANGO             |       AC       |    ✓     |    866M     |         24.52         |   1.37   | **1.59** |       **85.94**        | **80.36** |
+|           **Model**            |  **Datasets**  | **Text** | **#Params** |   FD ↓    |   KL ↓   |  FAD ↓   |   OVL ↑   |   REL ↑   |
+| :----------------------------: | :------------: | :------: | :---------: | :-------: | :------: | :------: | :-------: | :-------: |
+|          Ground truth          |       −        |    −     |      −      |     −     |    −     |    −     |   91.61   |   86.78   |
+|                                |                |          |             |           |          |          |           |           |
+|           DiffSound            |     AS+AC      |    ✓     |    400M     |   47.68   |   2.52   |   7.75   |     −     |     −     |
+|            AudioGen            | AS+AC+8 others |    ✗     |    285M     |     −     |   2.09   |   3.13   |     −     |     −     |
+|           AudioLDM-S           |       AC       |    ✗     |    181M     |   29.48   |   1.97   |   2.43   |     −     |     −     |
+|           AudioLDM-L           |       AC       |    ✗     |    739M     |   27.12   |   1.86   |   2.08   |     −     |     −     |
+|                                |                |          |             |           |          |          |           |           |
+| AudioLDM-M-Full-FT<sup>‡</sup> | AS+AC+2 others |    ✗     |    416M     |   26.12   | **1.26** |   2.57   |   79.85   |   76.84   |
+|  AudioLDM-L-Full<sup>‡</sup>   | AS+AC+2 others |    ✗     |    739M     |   32.46   |   1.76   |   4.18   |   78.63   |   62.69   |
+|       AudioLDM-L-Full-FT       | AS+AC+2 others |    ✗     |    739M     | **23.31** |   1.59   |   1.96   |     −     |     −     |
+|                                |                |          |             |           |          |          |           |           |
+|             TANGO              |       AC       |    ✓     |    866M     |   24.52   |   1.37   | **1.59** | **85.94** | **80.36** |
 
 ## Citation
+
 Please consider citing the following article if you found our work useful:
 
 ```bibtex
@@ -190,10 +194,29 @@ Please consider citing the following article if you found our work useful:
   year={2023}
 }
 ```
+
 ## Limitations
-TANGO is trained on the small AudioCaps dataset so it may not generate good audio samples related to concepts that it has not seen in training (e.g. _singing_). For the same reason, TANGO is not always able to finely control its generations over textual control prompts. For example, the generations from TANGO for prompts _Chopping tomatoes on a wooden table_ and _Chopping potatoes on a metal table_ are very similar. _Chopping vegetables on a table_ also produces similar audio samples. Training text-to-audio generation models on larger datasets is thus required for the model to learn the composition of textual concepts and varied text-audio mappings. 
+
+TANGO is trained on the small AudioCaps dataset so it may not generate good audio samples related to concepts that it has not seen in training (e.g. _singing_). For the same reason, TANGO is not always able to finely control its generations over textual control prompts. For example, the generations from TANGO for prompts _Chopping tomatoes on a wooden table_ and _Chopping potatoes on a metal table_ are very similar. _Chopping vegetables on a table_ also produces similar audio samples. Training text-to-audio generation models on larger datasets is thus required for the model to learn the composition of textual concepts and varied text-audio mappings.
 
 We are training another version of TANGO on larger datasets to enhance its generalization, compositional and controllable generation ability.
 
 ## Acknowledgement
+
 We borrow the code in `audioldm` and `audioldm_eval` from the [AudioLDM](https://github.com/haoheliu/AudioLDM) [repositories](https://github.com/haoheliu/audioldm_eval). We thank the AudioLDM team for open-sourcing their code.
+
+## Docker
+
+```
+docker compose build
+docker run --gpus all -v generated:/app/generated kennytat/tango:stable --prompt "your prompt here"
+extra arguments:
+"-b|--batch", help="Batch true|false", default="false"
+"-m|--model", help="Path to Model for TTA", default="weights/tango"
+"-p|--prompt", help="String or Array Prompt for TTA"
+"-o|--steps", help="Steps number", default="100"
+"-g|--guidance", help="guidance number", default="3"
+"-s|--samples", help="sample number", default="1"
+"-dp|--disable-progress", help="disable progress true|false", default="false"
+"-b|--batch-size", help="batch size number", default="8"
+```

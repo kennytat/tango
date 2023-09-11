@@ -1,0 +1,9 @@
+[project]
+name = "tonga"
+dynamic = ["version"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ['audioldm', 'audioldm_eval']
+exclude = ['img', 'data', 'configs', 'samples']
+namespaces = false

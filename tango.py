@@ -7,9 +7,10 @@ from audioldm.audio.stft import TacotronSTFT
 from audioldm.variational_autoencoder import AutoencoderKL
 
 class Tango:
-    def __init__(self, name="declare-lab/tango", device="cuda:0"):
+    # def __init__(self, name="declare-lab/tango", device="cuda:0"): # load checkpoint info from huggingface repo
+    def __init__(self, path="weights/tango", device="cuda:0"):  # load checkpoint info from local path 'path="weights/{tango|tango-full|tango-full-ft-audio-music-caps|tango-full-ft-audiocaps}"'
         
-        path = snapshot_download(repo_id=name)
+        # path = snapshot_download(repo_id=name) # load checkpoint info from huggingface repo
         
         vae_config = json.load(open("{}/vae_config.json".format(path)))
         stft_config = json.load(open("{}/stft_config.json".format(path)))
@@ -27,7 +28,7 @@ class Tango:
         self.stft.load_state_dict(stft_weights)
         self.model.load_state_dict(main_weights)
 
-        print ("Successfully loaded checkpoint from:", name)
+        print ("Successfully loaded checkpoint from:", path)
         
         self.vae.eval()
         self.stft.eval()
